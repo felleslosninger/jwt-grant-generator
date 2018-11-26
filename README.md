@@ -1,6 +1,6 @@
 # jwt-grant-generator
 
-This project demonstrates how to make a jwt grant used to retireve tokens for accessing Difi services like Kontakt- og reservasjonsregisteret REST-API or Id-porten self-service APIs.
+This project demonstrates how to make a jwt grant used to retireve tokens for accessing Difi services like Kontakt- og reservasjonsregisteret REST-API or ID-porten self-service APIs.
 
 Before you can retrieve any tokens you need to be a customer of DIFI and have a client registration, see https://samarbeid.difi.no
 
@@ -11,7 +11,7 @@ To generate a jwt-grant you need a propery file holding your client configuratio
 
 ```
 issuer=<Your client_id>
-audience=<Identifier of the idporten oidc provider instance you want to use, i.e. for ver2 env:  https://oidc-ver2.difi.no/idporten-oidc-provider/>
+audience=<Identifier of the idporten-oidc-provider instance you want to use, i.e. for ver2 env:  https://oidc-ver2.difi.no/idporten-oidc-provider/>
 token.endpoint=<Token endpoint to use, i.e. in ver2 env: https://oidc-ver2.difi.no/idporten-oidc-provider/token>
 scope=<scopes to request access for (space delimited list), i.e. for id-porten self service api use: idporten:dcr.read idporten:dcr.write>
 

@@ -28,14 +28,16 @@ public class JwtGrantGenerator {
         List<Base64> certChain = new ArrayList<>();
         certChain.add(Base64.encode(config.getCertificate().getEncoded()));
 
-        JWSHeader jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256).x509CertChain(certChain).build();
+        JWSHeader jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
+				.x509CertChain(certChain)
+				.build();
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .audience(config.getAud())
                 .issuer(config.getIss())
                 .claim("scope", config.getScope())
-                .jwtID(UUID.randomUUID().toString())
-                .issueTime(new Date(Clock.systemUTC().millis()))
+                .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
+                .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time!
                 .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec.
                 .build();
 
