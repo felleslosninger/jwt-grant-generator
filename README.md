@@ -1,6 +1,6 @@
 # jwt-grant-generator
 
-This project demonstrates how to make a jwt grant used to retireve tokens for accessing Difi services like Kontakt- og reservasjonsregisteret REST-API or ID-porten self-service APIs.
+This project demonstrates how to make a jwt grant used to retrieve tokens for accessing Difi services like Kontakt- og reservasjonsregisteret REST-API or ID-porten self-service APIs.
 
 Before you can retrieve any tokens you need to be a customer of DIFI and have a client registration, see https://samarbeid.difi.no
 
