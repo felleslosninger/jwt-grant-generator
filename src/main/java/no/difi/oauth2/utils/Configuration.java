@@ -14,8 +14,10 @@ public class Configuration {
     private String iss;
     private String aud;
     private String scope;
+    private String tokenEndpoint;
     private X509Certificate certificate;
     private PrivateKey privateKey;
+
 
     public String getIss() {
         return iss;
@@ -57,6 +59,18 @@ public class Configuration {
         this.scope = scope;
     }
 
+    public String getTokenEndpoint() {
+        return tokenEndpoint;
+    }
+
+    public void setTokenEndpoint(String tokenEndpoint) {
+        this.tokenEndpoint = tokenEndpoint;
+    }
+
+    public boolean hasTokenEndpoint() {
+        return tokenEndpoint != null;
+    }
+
     public static Configuration load(String[] args) throws Exception {
         Configuration config = new Configuration();
 
@@ -67,6 +81,7 @@ public class Configuration {
             config.setIss(props.getProperty("issuer"));
             config.setAud(props.getProperty("audience"));
             config.setScope(props.getProperty("scope"));
+            config.setTokenEndpoint(props.getProperty("token.endpoint"));
 
             String keystoreFile = props.getProperty("keystore.file");
             String keystorePassword = props.getProperty("keystore.password");

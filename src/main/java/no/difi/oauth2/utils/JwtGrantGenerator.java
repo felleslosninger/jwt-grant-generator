@@ -11,6 +11,9 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.util.Base64;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.apache.hc.client5.http.fluent.Content;
+import org.apache.hc.client5.http.fluent.Form;
+import org.apache.hc.client5.http.fluent.Request;
 
 public class JwtGrantGenerator {
 
@@ -20,7 +23,13 @@ public class JwtGrantGenerator {
         Configuration config = Configuration.load(args);
 
         String jwt = makeJwt(config);
+        System.out.println("Generated JWT-grant:");
         System.out.println(jwt);
+
+        if (config.hasTokenEndpoint()) {
+            System.out.println("\nRetrieved token-response:");
+            System.out.println(makeTokenRequest(jwt, config));
+        }
     }
 
     private static String makeJwt(Configuration config) throws Exception {
@@ -46,6 +55,22 @@ public class JwtGrantGenerator {
         signedJWT.sign(signer);
 
         return signedJWT.serialize();
+    }
+
+    private static String makeTokenRequest(String jwt, Configuration config) throws Exception {
+
+        List body = Form.form()
+                .add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
+                .add("assertion", jwt)
+                .build();
+
+        Content response = Request.Post(config.getTokenEndpoint())
+                .bodyForm(body)
+                .execute()
+                .returnContent();
+
+        return response.asString();
+
     }
 
 }
