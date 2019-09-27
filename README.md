@@ -14,6 +14,7 @@ To generate a jwt-grant you need a propery file holding your client configuratio
 ```
 issuer=<Your client_id>
 audience=<Identifier of the idporten-oidc-provider instance you want to use, i.e. for ver2 env:  https://oidc-ver2.difi.no/idporten-oidc-provider/>
+resource=<The intended audience for token. If included, the value will be transparantly set as the aud-claim in the access token>
 scope=<scopes to request access for (space delimited list), i.e. for id-porten self service api use: idporten:dcr.read idporten:dcr.write>
 
 keystore.file=<path to your keystore file holding your virksomhetssertifikat / keypair>
