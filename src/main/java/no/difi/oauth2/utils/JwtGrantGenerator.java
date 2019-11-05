@@ -43,6 +43,7 @@ public class JwtGrantGenerator {
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .audience(config.getAud())
+                .claim("resource", config.getResource())
                 .issuer(config.getIss())
                 .claim("scope", config.getScope())
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant

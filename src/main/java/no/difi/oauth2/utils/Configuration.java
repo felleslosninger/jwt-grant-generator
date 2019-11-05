@@ -13,6 +13,7 @@ public class Configuration {
 
     private String iss;
     private String aud;
+    private String resource;
     private String scope;
     private String tokenEndpoint;
     private X509Certificate certificate;
@@ -33,6 +34,14 @@ public class Configuration {
 
     public void setAud(String aud) {
         this.aud = aud;
+    }
+
+    public String getResource() {
+	return resource;
+    }
+
+    public void setResource(String resource) {
+	this.resource = resource;
     }
 
     public X509Certificate getCertificate() {
@@ -80,6 +89,7 @@ public class Configuration {
 
             config.setIss(props.getProperty("issuer"));
             config.setAud(props.getProperty("audience"));
+            config.setResource(props.getProperty("resource"));
             config.setScope(props.getProperty("scope"));
             config.setTokenEndpoint(props.getProperty("token.endpoint"));
 
@@ -129,3 +139,4 @@ public class Configuration {
     }
 
 }
+
