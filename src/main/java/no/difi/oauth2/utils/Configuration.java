@@ -1,6 +1,5 @@
 package no.difi.oauth2.utils;
 
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -18,7 +17,8 @@ public class Configuration {
     private String tokenEndpoint;
     private X509Certificate certificate;
     private PrivateKey privateKey;
-
+    private String consumerOrg;
+    private Boolean jsonOutput = false;
 
     public String getIss() {
         return iss;
@@ -41,7 +41,23 @@ public class Configuration {
     }
 
     public void setResource(String resource) {
-	this.resource = resource;
+        this.resource = resource;
+    }
+
+    public void setConsumerOrg(String consumerOrg) {
+	this.consumerOrg = consumerOrg;
+    }
+
+    public String getConsumerOrg() {
+        return consumerOrg;
+    }
+
+    public Boolean getJsonOutput() {
+        return jsonOutput;
+    }
+
+    public void setJsonOutput(Boolean jsonOutput) {
+        this.jsonOutput = jsonOutput;
     }
 
     public X509Certificate getCertificate() {
@@ -83,13 +99,14 @@ public class Configuration {
     public static Configuration load(String[] args) throws Exception {
         Configuration config = new Configuration();
 
-        if (args != null && args.length == 1 && args[0] != null) {
+        if (args != null && args.length >= 1 && args[0] != null) {
 
             Properties props = readPropertyFile(args[0]);
 
             config.setIss(props.getProperty("issuer"));
             config.setAud(props.getProperty("audience"));
             config.setResource(props.getProperty("resource"));
+            config.setConsumerOrg(props.getProperty("consumer_org"));
             config.setScope(props.getProperty("scope"));
             config.setTokenEndpoint(props.getProperty("token.endpoint"));
 
@@ -99,6 +116,9 @@ public class Configuration {
             String keystoreAliasPassword = props.getProperty("keystore.alias.password");
 
             loadCertificateAndKeyFromFile(config, keystoreFile, keystorePassword, keystoreAlias, keystoreAliasPassword);
+            if (args.length == 2 && args[1].equals("json")) {
+                config.setJsonOutput(true);
+            }
 
         } else {
             System.out.println("Usaga: java -jar jwtgrant.jar <property file name>");

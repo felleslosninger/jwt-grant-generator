@@ -14,21 +14,31 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.hc.client5.http.fluent.Content;
 import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtGrantGenerator {
-
 
     public static void main(String[] args) throws Exception {
 
         Configuration config = Configuration.load(args);
 
         String jwt = makeJwt(config);
-        System.out.println("Generated JWT-grant:");
-        System.out.println(jwt);
+        if (config.getJsonOutput()) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> output = new HashMap<>();
+            output.put("grant", jwt);
+            if (config.hasTokenEndpoint()) {
+                output.put("output", mapper.readValue(makeTokenRequest(jwt, config), Object.class));
+            }
+            System.out.println(mapper.writeValueAsString(output));
+        } else {
+            System.out.println("Generated JWT-grant:");
+            System.out.println(jwt);
 
-        if (config.hasTokenEndpoint()) {
-            System.out.println("\nRetrieved token-response:");
-            System.out.println(makeTokenRequest(jwt, config));
+            if (config.hasTokenEndpoint()) {
+                System.out.println("\nRetrieved token-response:");
+                System.out.println(makeTokenRequest(jwt, config));
+            }
         }
     }
 
@@ -38,14 +48,15 @@ public class JwtGrantGenerator {
         certChain.add(Base64.encode(config.getCertificate().getEncoded()));
 
         JWSHeader jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
-				.x509CertChain(certChain)
-				.build();
+                .x509CertChain(certChain)
+                .build();
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .audience(config.getAud())
                 .claim("resource", config.getResource())
                 .issuer(config.getIss())
                 .claim("scope", config.getScope())
+                .claim("consumer_org", config.getConsumerOrg())
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
                 .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time!
                 .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec.
