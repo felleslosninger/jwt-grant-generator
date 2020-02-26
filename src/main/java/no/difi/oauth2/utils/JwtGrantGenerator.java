@@ -28,7 +28,7 @@ public class JwtGrantGenerator {
             Map<String, Object> output = new HashMap<>();
             output.put("grant", jwt);
             if (config.hasTokenEndpoint()) {
-                output.put("output", mapper.readValue(makeTokenRequest(jwt, config), Object.class));
+                output.put("token", mapper.readValue(makeTokenRequest(jwt, config), Object.class));
             }
             System.out.println(mapper.writeValueAsString(output));
         } else {
