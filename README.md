@@ -9,7 +9,7 @@ It is important to understand the authorization flow used for these apis, see ht
 Note: The access token is only retrieved if an token.endpoint property is given. Without this a jwt bearer grant will only be printed.
 
 ### Client configuration
-To generate a jwt-grant you need a propery file holding your client configuration:
+To generate a jwt-grant you need a property file holding your client configuration:
 
 ```
 issuer=<Your client_id>
@@ -28,6 +28,11 @@ To also retrieve an access-token from an authorization server, add this property
 
 ```
 token.endpoint=<Token endpoint to use, i.e. in ver2 env: https://oidc-ver2.difi.no/idporten-oidc-provider/token>
+```
+
+If you want to generate a token utilising the delegation capabilities in Maskinporten, add this property to the properties file:
+```
+consumer_org=<the orgnumer of the consumner that has delegated the access>
 ```
 
 ## Usage
