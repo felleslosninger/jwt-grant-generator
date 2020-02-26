@@ -40,3 +40,27 @@ mvn package
 java -jar target\jwt-grant-generator-1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties
 
 ```
+
+### Output as JSON
+If you want the response as json, you can add an additional parameter so the command to build and run is
+```
+mvn package
+
+java -jar target\jwt-grant-generator-1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties java
+
+```
+
+The JSON will be a single line so it is easy to capture in a script and can then be parsed with tools like jq.
+A pretty representation of the JSON schema is
+```
+{
+    "grant": "...",
+    "token": {
+        "access_token": "...",
+        "token_type": "Bearer",
+        "expires_in": 7199,
+        "scope": "..."
+    }
+}
+
+```
