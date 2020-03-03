@@ -9,7 +9,7 @@ It is important to understand the authorization flow used for these apis, see ht
 Note: The access token is only retrieved if an token.endpoint property is given. Without this a jwt bearer grant will only be printed.
 
 ### Client configuration
-To generate a jwt-grant you need a propery file holding your client configuration:
+To generate a jwt-grant you need a property file holding your client configuration:
 
 ```
 issuer=<Your client_id>
@@ -30,6 +30,11 @@ To also retrieve an access-token from an authorization server, add this property
 token.endpoint=<Token endpoint to use, i.e. in ver2 env: https://oidc-ver2.difi.no/idporten-oidc-provider/token>
 ```
 
+If you want to generate a token utilising the delegation capabilities in Maskinporten, add this property to the properties file:
+```
+consumer_org=<the orgnumber of the consumer that has delegated the access>
+```
+
 ## Usage
 
 To build and run use:
@@ -38,5 +43,29 @@ To build and run use:
 mvn package
 
 java -jar target\jwt-grant-generator-1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties
+
+```
+
+### Output as JSON
+If you want the response as json, you can add an additional parameter so the command to build and run is
+```
+mvn package
+
+java -jar target\jwt-grant-generator-1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties json
+
+```
+
+The JSON will be a single line so it is easy to capture in a script and can then be parsed with tools like jq.
+A pretty representation of the JSON schema is
+```
+{
+    "grant": "...",
+    "token": {
+        "access_token": "...",
+        "token_type": "Bearer",
+        "expires_in": 7199,
+        "scope": "..."
+    }
+}
 
 ```
