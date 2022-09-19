@@ -35,6 +35,11 @@ If you want to generate a token utilising the delegation capabilities in Maskinp
 consumer_org=<the orgnumber of the consumer that has delegated the access>
 ```
 
+You may authenticate with a self-signed certificate if your client in Maskinporten holds a JSON Web Key Set with your public key, simply add your key ID to the properties file:
+```
+keystore.kid=<guid to key id used in Maskinporten client jwks>
+```
+
 ## Usage
 
 To build and run use:

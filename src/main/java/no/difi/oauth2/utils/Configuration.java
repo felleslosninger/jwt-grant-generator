@@ -19,6 +19,7 @@ public class Configuration {
     private PrivateKey privateKey;
     private String consumerOrg;
     private Boolean jsonOutput = false;
+    private String kid;
 
     public String getIss() {
         return iss;
@@ -94,6 +95,18 @@ public class Configuration {
         return tokenEndpoint != null;
     }
 
+    public String getKid() {
+        return kid;
+    }
+
+    public void setKid(String kid) {
+        this.kid = kid;
+    }
+
+    public boolean hasKid() {
+        return kid != null;
+    }
+
     public static Configuration load(String[] args) throws Exception {
         Configuration config = new Configuration();
 
@@ -112,6 +125,8 @@ public class Configuration {
             String keystorePassword = props.getProperty("keystore.password");
             String keystoreAlias = props.getProperty("keystore.alias");
             String keystoreAliasPassword = props.getProperty("keystore.alias.password");
+
+            config.setKid(props.getProperty("keystore.kid"));
 
             loadCertificateAndKeyFromFile(config, keystoreFile, keystorePassword, keystoreAlias, keystoreAliasPassword);
             if (args.length == 2 && args[1].equals("json")) {
