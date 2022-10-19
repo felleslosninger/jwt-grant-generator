@@ -1,19 +1,21 @@
 # jwt-grant-generator
 
-This project demonstrates how to make a jwt grant used to retrieve tokens for accessing Difi services like Kontakt- og reservasjonsregisteret REST-API or ID-porten self-service APIs.
+This project demonstrates how clients of Maskinporten can make a jwt grant used to retrieve tokens for accessing services like Kontakt- og reservasjonsregisteret REST-API or ID-porten self-service APIs.
 
-Before you can retrieve any tokens you need to be a customer of DIFI and have a client registration, see https://samarbeid.difi.no
+Before you can retrieve any tokens you need to be a customer of Digdir and have a client registration, see https://samarbeid.digdir.no
 
-It is important to understand the authorization flow used for these apis, see https://difi.github.io/idporten-oidc-dokumentasjon/oidc_auth_server-to-server-oauth2.html
+It is important to understand the authorization flow used for these apis, see https://docs.digdir.no/docs/Maskinporten/maskinporten_guide_apikonsument 
 
 Note: The access token is only retrieved if an token.endpoint property is given. Without this a jwt bearer grant will only be printed.
+
+For questions, please contact servicedesk@digdir.no
 
 ### Client configuration
 To generate a jwt-grant you need a property file holding your client configuration:
 
 ```
 issuer=<Your client_id>
-audience=<Identifier of the idporten-oidc-provider instance you want to use, i.e. for ver2 env:  https://oidc-ver2.difi.no/idporten-oidc-provider/>
+audience=<Identifier of the Maskinporten instance you want to use, i.e. for ver2 env:  https://ver2.maskinporten.no/>
 resource=<The intended audience for token. If included, the value will be transparantly set as the aud-claim in the access token>
 scope=<scopes to request access for (space delimited list), i.e. for id-porten self service api use: idporten:dcr.read idporten:dcr.write>
 
@@ -27,7 +29,7 @@ keystore.alias.password=<alias password>
 To also retrieve an access-token from an authorization server, add this property to the properties file:
 
 ```
-token.endpoint=<Token endpoint to use, i.e. in ver2 env: https://oidc-ver2.difi.no/idporten-oidc-provider/token>
+token.endpoint=<Token endpoint to use, i.e. in ver2 env: https://ver2.maskinporten.no/token>
 ```
 
 If you want to generate a token utilising the delegation capabilities in Maskinporten, add this property to the properties file:
