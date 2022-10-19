@@ -49,9 +49,16 @@ public class JwtGrantGenerator {
         List<Base64> certChain = new ArrayList<>();
         certChain.add(Base64.encode(config.getCertificate().getEncoded()));
 
-        JWSHeader jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
+        JWSHeader jwtHeader;
+        if (config.hasKid()) {
+            jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
+                .keyID(config.getKid())
+                .build();
+        } else {
+            jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
                 .x509CertChain(certChain)
                 .build();
+        }
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .audience(config.getAud())
