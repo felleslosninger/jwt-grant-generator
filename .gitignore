@@ -1,0 +1,4 @@
+# Jenv settings
+/.java-version
+.idea
+/target

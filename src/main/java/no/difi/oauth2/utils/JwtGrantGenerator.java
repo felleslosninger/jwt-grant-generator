@@ -11,9 +11,9 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 import org.apache.hc.client5.http.fluent.Response;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicClassicHttpResponse;
 
 import java.time.Clock;
 import java.util.*;
@@ -85,11 +85,11 @@ public class JwtGrantGenerator {
                 .add("assertion", jwt)
                 .build();
         try {
-            Response response = Request.Post(config.getTokenEndpoint())
+            Response response = Request.post(config.getTokenEndpoint())
                 .bodyForm(body)
                 .execute();
 
-            HttpEntity e = ((CloseableHttpResponse) response.returnResponse()).getEntity();
+            HttpEntity e = ((BasicClassicHttpResponse) response.returnResponse()).getEntity();
             return EntityUtils.toString(e);
 
         } catch (Exception e) {
