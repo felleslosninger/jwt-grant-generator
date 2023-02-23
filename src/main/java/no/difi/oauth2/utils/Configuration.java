@@ -1,11 +1,13 @@
 package no.difi.oauth2.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Properties;
 
 public class Configuration {
@@ -121,6 +123,7 @@ public class Configuration {
             config.setScope(props.getProperty("scope"));
             config.setTokenEndpoint(props.getProperty("token.endpoint"));
 
+            String keystoreType = props.getProperty("keystore.type", "JKS");
             String keystoreFile = props.getProperty("keystore.file");
             String keystorePassword = props.getProperty("keystore.password");
             String keystoreAlias = props.getProperty("keystore.alias");
@@ -128,7 +131,7 @@ public class Configuration {
 
             config.setKid(props.getProperty("keystore.kid"));
 
-            loadCertificateAndKeyFromFile(config, keystoreFile, keystorePassword, keystoreAlias, keystoreAliasPassword);
+            loadCertificateAndKeyFromFile(config, keystoreType, keystoreFile, keystorePassword, keystoreAlias, keystoreAliasPassword);
             if (args.length == 2 && args[1].equals("json")) {
                 config.setJsonOutput(true);
             }
@@ -141,14 +144,18 @@ public class Configuration {
         return config;
     }
 
-    private static void loadCertificateAndKeyFromFile(Configuration config, String keyStoreFile, String keyStorePassword, String alias, String keyPassword) throws Exception {
-       InputStream is = new FileInputStream(keyStoreFile);
-       loadCertificate(config, is, keyStorePassword, alias, keyPassword);
-
+    private static void loadCertificateAndKeyFromFile(Configuration config, String keystoreType, String keyStoreFile, String keyStorePassword, String alias, String keyPassword) throws Exception {
+        final InputStream is;
+        if (keyStoreFile.startsWith("base64:")) {
+            is = new ByteArrayInputStream(Base64.getDecoder().decode(keyStoreFile.replace("base64:", "")));
+        } else {
+            is = new FileInputStream(keyStoreFile);
+        }
+       loadCertificate(config, is, keystoreType, keyStorePassword, alias, keyPassword);
     }
 
-    private static void loadCertificate(Configuration config, InputStream is, String keystorePassword, String alias, String keyPassword) throws Exception {
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+    private static void loadCertificate(Configuration config, InputStream is, String keystoreType, String keystorePassword, String alias, String keyPassword) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(keystoreType);
         keyStore.load(is, keystorePassword.toCharArray());
 
         PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keyPassword.toCharArray()); // Read from KeyStore
