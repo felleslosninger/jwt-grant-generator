@@ -19,11 +19,18 @@ audience=<Identifier of the Maskinporten instance you want to use, i.e. for ver2
 resource=<The intended audience for token. If included, the value will be transparantly set as the aud-claim in the access token>
 scope=<scopes to request access for (space delimited list), i.e. for id-porten self service api use: idporten:dcr.read idporten:dcr.write>
 
-keystore.file=<path to your keystore file holding your virksomhetssertifikat / keypair>
+keystore.type=<keystore type, default is JKS>
+keystore.file=<path to your keystore file holding your virksomhetssertifikat / keypair, or base64-encoded keystore>
 keystore.password=<keystore password>
 keystore.alias=<alias for your virksomhetssertifikat's key>
 keystore.alias.password=<alias password>
 
+```
+
+To use base64-encoded keystore, use:
+
+```
+keystore.file=base64:/u3+7QAAAAIAAAADAAAAAQAPY29tbWZp...
 ```
 
 To also retrieve an access-token from an authorization server, add this property to the properties file:
