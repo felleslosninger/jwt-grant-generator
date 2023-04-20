@@ -56,7 +56,7 @@ To build and run use:
 ```
 mvn package
 
-java -jar target\jwt-grant-generator-1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties
+java -jar target\jwt-grant-generator-1.1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties
 
 ```
 
@@ -65,7 +65,7 @@ If you want the response as json, you can add an additional parameter so the com
 ```
 mvn package
 
-java -jar target\jwt-grant-generator-1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties json
+java -jar target\jwt-grant-generator-1.1.0-SNAPSHOT-jar-with-dependencies.jar myclient.properties json
 
 ```
 
