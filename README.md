@@ -15,7 +15,7 @@ To generate a jwt-grant you need a property file holding your client configurati
 
 ```
 issuer=<Your client_id>
-audience=<Identifier of the Maskinporten instance you want to use, i.e. for ver2 env:  https://ver2.maskinporten.no/>
+audience=<Identifier of the Maskinporten instance you want to use, i.e. for test env:  https://test.maskinporten.no/>
 resource=<The intended audience for token. If included, the value will be transparantly set as the aud-claim in the access token>
 scope=<scopes to request access for (space delimited list), i.e. for id-porten self service api use: idporten:dcr.read idporten:dcr.write>
 
@@ -36,7 +36,7 @@ keystore.file=base64:/u3+7QAAAAIAAAADAAAAAQAPY29tbWZp...
 To also retrieve an access-token from an authorization server, add this property to the properties file:
 
 ```
-token.endpoint=<Token endpoint to use, i.e. in ver2 env: https://ver2.maskinporten.no/token>
+token.endpoint=<Token endpoint to use, i.e. in test env: https://test.maskinporten.no/token>
 ```
 
 If you want to generate a token utilising the delegation capabilities in Maskinporten, add this property to the properties file:
