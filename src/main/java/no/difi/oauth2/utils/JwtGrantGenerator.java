@@ -42,8 +42,8 @@ public class JwtGrantGenerator {
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .audience("TODO maskinporten-miljø")
                 .claim("resource", "<your intended audience>")
-                .issuer("TODO clientid")
-                .claim("scope", "TODO scope-from-client")
+                .issuer("__CLIENT_ID__")
+                .claim("scope", "__SCOPE__")
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
                 .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time!
                 .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec.
