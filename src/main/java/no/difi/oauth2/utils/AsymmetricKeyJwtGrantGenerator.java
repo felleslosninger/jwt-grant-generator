@@ -29,31 +29,47 @@ public class AsymmetricKeyJwtGrantGenerator {
 
     public static void main(String[] args) throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+        // Variable som kommer fra integrasjonen
+        String key_id = "__KID__"; // Key id (kid)
+        String integrasjonsid = "__CLIENT_ID__";
+        String scope = " __SCOPE__";
+
+        // Variable som avhengiger av miljø
+        String maskinportenAudience = "__MASKINPORTEN_URL__";
+        String maskinporten_token_url__ = "__MASKINPORTEN_TOKEN_URL__";
+
+        // Variable som avhenger av APIet du skal autentisere mot
+        String apiAudience = "<your intended audience>"; // Sjekk API-tilbyder om de spesifiserer en verdi for denne
+
+        // Variable som er tilpasset din keystore eller serifikathåndtering
         String keystorepassword = "keystorepassword";
         String alias = "keystore cert alias";
+        String pathToKeystore = "pathToKeystore";
 
-        keyStore.load(new FileInputStream("pathToKeystore"), keystorepassword.toCharArray());
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(new FileInputStream(pathToKeystore), keystorepassword.toCharArray());
         X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
 
         List<Base64> certChain = new ArrayList<>();
         certChain.add(Base64.encode(certificate.getEncoded()));
 
         JWSHeader jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
-                .keyID("__KID__")
+                .keyID(key_id)
                 .build();
+
+
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .audience("TODO maskinporten-miljø")
-                .claim("resource", "<your intended audience>")
-                .issuer("__CLIENT_ID__")
-                .claim("scope", " __SCOPE__")
+                .audience(maskinportenAudience)
+                .claim("resource", apiAudience)
+                .issuer(integrasjonsid)
+                .claim("scope", scope)
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
-                .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time!
-                .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec.
+                .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time
+                .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec
                 .build();
 
-        PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keystorepassword.toCharArray()); // Read from KeyStore
+        PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keystorepassword.toCharArray());
         JWSSigner signer = new RSASSASigner(privateKey);
         SignedJWT signedJWT = new SignedJWT(jwtHeader, claims);
         signedJWT.sign(signer);
@@ -65,7 +81,7 @@ public class AsymmetricKeyJwtGrantGenerator {
                 .add("assertion", jwt)
                 .build();
         try {
-            Response response = Request.post("TODO tokenendpoint")
+            Response response = Request.post(maskinporten_token_url__)
                     .bodyForm(body)
                     .execute();
 
