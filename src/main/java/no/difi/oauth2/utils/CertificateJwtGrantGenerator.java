@@ -25,12 +25,25 @@ public class CertificateJwtGrantGenerator {
 
     public static void main(String[] args) throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance("JKS");
-        String keystorepassword = "keystorepassword";
-        String alias = "keystore cert alias";
+        // Variable som kommer fra integrasjonen
+        String integrasjonsid = "__CLIENT_ID__";
+        String scope = " __SCOPE__";
 
-        keyStore.load(new FileInputStream("pathToKeystore"), keystorepassword.toCharArray());
-        X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
+        // Variable som avhengiger av miljø
+        String maskinportenAudience = "__MASKINPORTEN_URL__";
+        String maskinportenTokenUrl = "__MASKINPORTEN_TOKEN_URL__";
+
+        // Variable som avhenger av APIet du skal autentisere mot
+        String targetApiAudience = "<your intended audience>"; // Sjekk API-tilbyder om de spesifiserer en verdi for denne
+
+        // Variable som er tilpasset din keystore hvor du har lagret virksomhetssertifikat
+        String aliasToVirksomhetssertifikat = "virksomhetsserifikat-alias";
+        String keystorepassword = "keystorepassword";
+        String pathToKeystore = "pathToKeystore";
+
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(new FileInputStream(pathToKeystore), keystorepassword.toCharArray());
+        X509Certificate certificate = (X509Certificate) keyStore.getCertificate(aliasToVirksomhetssertifikat);
 
         List<Base64> certChain = new ArrayList<>();
         certChain.add(Base64.encode(certificate.getEncoded()));
@@ -40,16 +53,16 @@ public class CertificateJwtGrantGenerator {
                 .build();
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .audience("TODO maskinporten-miljø")
-                .claim("resource", "<your intended audience>")
-                .issuer("__CLIENT_ID__")
-                .claim("scope", "__SCOPE__")
+                .audience(maskinportenAudience)
+                .claim("resource", targetApiAudience)
+                .issuer(integrasjonsid)
+                .claim("scope", scope)
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
-                .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time!
-                .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec.
+                .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time
+                .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec
                 .build();
 
-        PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, keystorepassword.toCharArray()); // Read from KeyStore
+        PrivateKey privateKey = (PrivateKey) keyStore.getKey(aliasToVirksomhetssertifikat, keystorepassword.toCharArray());
         JWSSigner signer = new RSASSASigner(privateKey);
         SignedJWT signedJWT = new SignedJWT(jwtHeader, claims);
         signedJWT.sign(signer);
@@ -61,7 +74,7 @@ public class CertificateJwtGrantGenerator {
                 .add("assertion", jwt)
                 .build();
         try {
-            Response response = Request.post("TODO tokenendpoint")
+            Response response = Request.post(maskinportenTokenUrl)
                     .bodyForm(body)
                     .execute();
 
