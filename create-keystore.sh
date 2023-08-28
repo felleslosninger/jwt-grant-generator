@@ -12,7 +12,7 @@ export JKS_ST="Goiania"
 export JKS_C="BR"
 
 export KEYSTORE_ALIAS="tinecert"
-export KEYSTORE_FILE_PATH="./${KEYSTORE_ALIAS}.jks"
+export KEYSTORE_FILE_PATH="./${KEYSTORE_ALIAS}.p12"
 export KEYSTORE_PASSWORD=$(openssl rand -base64 30)
 
 # Display Key pass to get and add in application.yaml
@@ -23,7 +23,7 @@ echo ""
 # Generate KeyPair storage type JKS
 keytool -genkeypair \
   -alias $KEYSTORE_ALIAS \
-  -storetype JKS \
+  -storetype PKCS12 \
   -keyalg RSA \
   -sigalg SHA256withRSA \
   -keysize 2048 \
