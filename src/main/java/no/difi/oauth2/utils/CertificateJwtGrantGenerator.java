@@ -29,17 +29,17 @@ public class CertificateJwtGrantGenerator {
 
         // Variable som kommer fra integrasjonen
         String integrasjonsid = "__CLIENT_ID__";
-        String scope = " __SCOPE__";
+        String scope = "__SCOPE__";
 
         // Variable som avhengiger av miljø
         String maskinportenAudience = "__MASKINPORTEN_URL__";
         String maskinportenTokenUrl = "__MASKINPORTEN_TOKEN_URL__";
 
         // Variable som avhenger av APIet du skal autentisere mot
-        String targetApiAudience = "<your intended audience>"; // Sjekk API-tilbyder om de spesifiserer en verdi for denne
+        String targetApiAudience = null; // Optional: Sjekk API-tilbyder om de spesifiserer en verdi for denne
 
         // Variable som er tilpasset din keystore hvor du har lagret virksomhetssertifikatet ditt
-        String keystoreType = "JKS";
+        String keystoreType = "PKCS12";
         String pathToKeystore = "pathToKeystore";
         String keystorepassword = "keystorepassword";
         String aliasToVirksomhetssertifikat = "virksomhetsserifikat-alias";
@@ -58,9 +58,9 @@ public class CertificateJwtGrantGenerator {
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .audience(maskinportenAudience)
-                .claim("resource", targetApiAudience)
                 .issuer(integrasjonsid)
                 .claim("scope", scope)
+                .claim("resource", targetApiAudience)
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
                 .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time
                 .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec
