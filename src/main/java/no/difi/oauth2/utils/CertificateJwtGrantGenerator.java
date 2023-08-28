@@ -12,6 +12,7 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 import org.apache.hc.client5.http.fluent.Response;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicClassicHttpResponse;
@@ -79,6 +80,7 @@ public class CertificateJwtGrantGenerator {
                 .build();
         try {
             Response response = Request.post(maskinportenTokenUrl)
+                    .addHeader("Content-Type", ContentType.APPLICATION_FORM_URLENCODED.toString())
                     .bodyForm(body)
                     .execute();
 
