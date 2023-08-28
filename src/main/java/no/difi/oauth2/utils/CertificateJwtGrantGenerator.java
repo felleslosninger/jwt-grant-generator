@@ -7,6 +7,8 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.util.Base64;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+
+// Fjerne apache -> bytte til java
 import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 import org.apache.hc.client5.http.fluent.Response;
@@ -36,12 +38,14 @@ public class CertificateJwtGrantGenerator {
         // Variable som avhenger av APIet du skal autentisere mot
         String targetApiAudience = "<your intended audience>"; // Sjekk API-tilbyder om de spesifiserer en verdi for denne
 
-        // Variable som er tilpasset din keystore hvor du har lagret virksomhetssertifikat
-        String aliasToVirksomhetssertifikat = "virksomhetsserifikat-alias";
-        String keystorepassword = "keystorepassword";
+        // Variable som er tilpasset din keystore hvor du har lagret virksomhetssertifikatet ditt
+        String keystoreType = "JKS";
         String pathToKeystore = "pathToKeystore";
+        String keystorepassword = "keystorepassword";
+        String aliasToVirksomhetssertifikat = "virksomhetsserifikat-alias";
+        String aliasPassword = "myaliaspassword";
 
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+        KeyStore keyStore = KeyStore.getInstance(keystoreType);
         keyStore.load(new FileInputStream(pathToKeystore), keystorepassword.toCharArray());
         X509Certificate certificate = (X509Certificate) keyStore.getCertificate(aliasToVirksomhetssertifikat);
 
@@ -62,7 +66,7 @@ public class CertificateJwtGrantGenerator {
                 .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec
                 .build();
 
-        PrivateKey privateKey = (PrivateKey) keyStore.getKey(aliasToVirksomhetssertifikat, keystorepassword.toCharArray());
+        PrivateKey privateKey = (PrivateKey) keyStore.getKey(aliasToVirksomhetssertifikat, aliasPassword.toCharArray());
         JWSSigner signer = new RSASSASigner(privateKey);
         SignedJWT signedJWT = new SignedJWT(jwtHeader, claims);
         signedJWT.sign(signer);
