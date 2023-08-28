@@ -43,9 +43,10 @@ public class AsymmetricKeyJwtGrantGenerator {
 
         // Variable som er tilpasset din keystore hvor du har lagt privatnøkkelen
         String keyStoreType = "PKCS12";
-        String aliasToPrivatekey = "privatekey-alias";
         String keystorepassword = "keystorepassword";
         String pathToKeystore = "pathToKeystore";
+        String aliasToPrivatekey = "privatekey-alias";
+
 
         KeyStore keyStore = KeyStore.getInstance(keyStoreType);
         keyStore.load(new FileInputStream(pathToKeystore), keystorepassword.toCharArray());
