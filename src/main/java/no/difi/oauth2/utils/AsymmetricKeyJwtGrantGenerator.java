@@ -42,11 +42,12 @@ public class AsymmetricKeyJwtGrantGenerator {
         String targetApiAudience = "<your intended audience>"; // Sjekk API-tilbyder om de spesifiserer en verdi for denne
 
         // Variable som er tilpasset din keystore hvor du har lagt privatnøkkelen
+        String keyStoreType = "PKCS12";
         String aliasToPrivatekey = "privatekey-alias";
         String keystorepassword = "keystorepassword";
         String pathToKeystore = "pathToKeystore";
 
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
         keyStore.load(new FileInputStream(pathToKeystore), keystorepassword.toCharArray());
         X509Certificate certificate = (X509Certificate) keyStore.getCertificate(aliasToPrivatekey);
 
@@ -56,7 +57,6 @@ public class AsymmetricKeyJwtGrantGenerator {
         JWSHeader jwtHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
                 .keyID(key_id)
                 .build();
-
 
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
