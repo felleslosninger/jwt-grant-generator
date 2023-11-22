@@ -60,7 +60,7 @@ public class JwtGrantGenerator {
                 .build();
         }
 
-        JWTClaimsSet claims = new JWTClaimsSet.Builder()
+        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
                 .audience(config.getAud())
                 .claim("resource", config.getResource())
                 .issuer(config.getIss())
@@ -68,8 +68,11 @@ public class JwtGrantGenerator {
                 .claim("consumer_org", config.getConsumerOrg())
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant
                 .issueTime(new Date(Clock.systemUTC().millis())) // Use UTC time!
-                .expirationTime(new Date(Clock.systemUTC().millis() + 120000)) // Expiration time is 120 sec.
-                .build();
+                .expirationTime(new Date(Clock.systemUTC().millis() + 120000));
+        if (config.getPid() != null) {
+            builder.claim("pid", config.getPid());
+        }
+        JWTClaimsSet claims = builder.build();
 
         JWSSigner signer = new RSASSASigner(config.getPrivateKey());
         SignedJWT signedJWT = new SignedJWT(jwtHeader, claims);
@@ -78,7 +81,7 @@ public class JwtGrantGenerator {
         return signedJWT.serialize();
     }
 
-    private static String makeTokenRequest(String jwt, Configuration config) throws Exception {
+    private static String makeTokenRequest(String jwt, Configuration config)  {
 
         List body = Form.form()
                 .add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
