@@ -16,6 +16,7 @@ public class Configuration {
     private String aud;
     private String resource;
     private String scope;
+    private String pid;
     private String tokenEndpoint;
     private X509Certificate certificate;
     private PrivateKey privateKey;
@@ -85,6 +86,14 @@ public class Configuration {
         this.scope = scope;
     }
 
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
     public String getTokenEndpoint() {
         return tokenEndpoint;
     }
@@ -121,6 +130,7 @@ public class Configuration {
             config.setResource(props.getProperty("resource"));
             config.setConsumerOrg(props.getProperty("consumer_org"));
             config.setScope(props.getProperty("scope"));
+            config.setPid(props.getProperty("pid"));
             config.setTokenEndpoint(props.getProperty("token.endpoint"));
 
             String keystoreType = props.getProperty("keystore.type", "JKS");
