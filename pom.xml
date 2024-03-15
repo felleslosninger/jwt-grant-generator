@@ -11,7 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>9.37.2</nimbus-jose-jwt.version>
         <httpclient5-fluent.version>5.2.1</httpclient5-fluent.version>
         <slf4j.version>2.0.7</slf4j.version>
         <jackson-databind.version>2.15.1</jackson-databind.version>
