@@ -25,6 +25,9 @@ keystore.password=<keystore password>
 keystore.alias=<alias for your virksomhetssertifikat's key>
 keystore.alias.password=<alias password>
 
+authorization_details.<auth_detail_index>.type=urn:altinn:systemuser
+authorization_details.<auth_detail_index>.systemuser_org.ID=0192:<system_org_no>
+authorization_details.<auth_detail_index>.systemuser_org.authority=iso6523-actorid-upis
 ```
 
 To use base64-encoded keystore, use:
@@ -47,6 +50,21 @@ consumer_org=<the orgnumber of the consumer that has delegated the access>
 You may authenticate with a self-signed certificate if your client in Maskinporten holds a JSON Web Key Set with your public key, simply add your key ID to the properties file:
 ```
 keystore.kid=<guid to key id used in Maskinporten client jwks>
+```  
+
+Authorization details will be decoded, and can contain more than one, so that each <auth_detail_index> makes a separate authorization_details. Using sub-values (like systemuser_org) creates sub object in jwt, the example config above will be included like this:
+```json
+{
+  ...
+  "authorization_details" : [ {
+    "type" : "urn:altinn:systemuser",
+    "systemuser_org" : {
+      "ID" : "0192:<systerm_org_no>",
+      "authority" : "iso6523-actorid-upis"
+    }
+  } ],
+  ...
+}
 ```
 
 ## Usage

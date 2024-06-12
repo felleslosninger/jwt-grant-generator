@@ -64,6 +64,7 @@ public class JwtGrantGenerator {
                 .audience(config.getAud())
                 .claim("resource", config.getResource())
                 .issuer(config.getIss())
+                .claim("authorization_details", config.getAuthorizationDetails())
                 .claim("scope", config.getScope())
                 .claim("consumer_org", config.getConsumerOrg())
                 .jwtID(UUID.randomUUID().toString()) // Must be unique for each grant

@@ -7,7 +7,11 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class Configuration {
@@ -23,6 +27,7 @@ public class Configuration {
     private String consumerOrg;
     private Boolean jsonOutput = false;
     private String kid;
+    private List<Map<String,Object>> authorizationDetails;
 
     public String getIss() {
         return iss;
@@ -118,6 +123,14 @@ public class Configuration {
         return kid != null;
     }
 
+    public List<Map<String, Object>> getAuthorizationDetails() {
+        return authorizationDetails;
+    }
+
+    public void setAuthorizationDetails(List<Map<String, Object>> authorizationDetails) {
+        this.authorizationDetails = authorizationDetails;
+    }
+
     public static Configuration load(String[] args) throws Exception {
         Configuration config = new Configuration();
 
@@ -132,6 +145,7 @@ public class Configuration {
             config.setScope(props.getProperty("scope"));
             config.setPid(props.getProperty("pid"));
             config.setTokenEndpoint(props.getProperty("token.endpoint"));
+            config.setAuthorizationDetails(getAuthorizationDetails(props));
 
             String keystoreType = props.getProperty("keystore.type", "JKS");
             String keystoreFile = props.getProperty("keystore.file");
@@ -186,6 +200,40 @@ public class Configuration {
         }
 
         return props;
+    }
+
+    private static List<Map<String, Object>> getAuthorizationDetails(Properties props) {
+        List<String> auth_keys = (props.stringPropertyNames()).stream().filter(key -> key.startsWith("authorization_details")).toList();
+
+        if(auth_keys.isEmpty()){
+            return null;
+        }  
+
+        Map<String, Map<String, Object>> authDetails = new LinkedHashMap<>();
+        for (String key : auth_keys) {
+            String[] parts = key.split("\\.");
+            String authDetailIndex = "0";
+            Map<String, Object> level = null;
+            for(int index = 1; index < parts.length - 1; index++){
+                authDetailIndex = parts[index];
+                if(level != null){
+                    if(!level.containsKey(authDetailIndex)){
+                            level.put(authDetailIndex, new LinkedHashMap<String,Object>());
+                    }
+                    level = (Map<String, Object>)level.get(authDetailIndex);
+                }else{
+                    if(!authDetails.containsKey(authDetailIndex)){
+                        authDetails.put(authDetailIndex, new LinkedHashMap<String,Object>());
+                    }
+                    level = authDetails.get(authDetailIndex);
+                }
+            }
+
+            if(level != null){
+                level.put(parts[parts.length -1], props.getProperty(key));
+            }
+        }
+        return new ArrayList<>(authDetails.values());
     }
 
 }
