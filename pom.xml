@@ -14,7 +14,7 @@
         <nimbus-jose-jwt.version>9.37.4</nimbus-jose-jwt.version>
         <httpclient5-fluent.version>5.2.1</httpclient5-fluent.version>
         <slf4j.version>2.0.7</slf4j.version>
-        <jackson-databind.version>2.18.9</jackson-databind.version>
+        <jackson-databind.version>2.18.10</jackson-databind.version>
         <java.version>1.8</java.version>
     </properties>
 
